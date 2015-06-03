@@ -1,12 +1,15 @@
+CFLAGS?=-O2 -g
+
 OBJECTS = loader.o kernel.o
 CC = ~/opt/cross/bin/i686-elf-gcc
-CFLAGS = -std=gnu99 -ffreestanding -nostdlib -lgcc -Wall -Wextra -Werror
+CFLAGS:=$(CFLAGS) -std=gnu11 -ffreestanding -fbuiltin -Wall -Wextra -Werror
 LDFLAGS = -T link.ld
 AS = ~/opt/cross/bin/i686-elf-as
 ASFLAGS = --warn --fatal-warnings
+LIBS = -nostdlib -lgcc
 
 kernel.elf : $(OBJECTS)
-	$(CC) $(LDFLAGS) -o kernel.elf $(OBJECTS) $(CFLAGS)
+	$(CC) $(LDFLAGS) -o kernel.elf $(OBJECTS) $(CFLAGS) $(LIBS)
 
 os.iso: kernel.elf
 	mkdir -p iso/boot/grub/
@@ -30,4 +33,5 @@ run: os.iso
 	$(AS) $(ASFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o kernel.elf os.iso iso run.log
+	rm -rf iso
+	rm *.o kernel.elf os.iso run.log

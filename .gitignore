@@ -19,6 +19,8 @@
 *.i*86
 *.x86_64
 
+.vagrant
+
 # Build directories
 cross-build/
 iso/

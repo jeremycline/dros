@@ -1,5 +1,5 @@
 #ifndef _STRING_H
-#define _STRING_H
+#define _STRING_H 1
 
 int memcmp(const void *, const void *, size_t);
 void * memcpy(void *, const void *, size_t);

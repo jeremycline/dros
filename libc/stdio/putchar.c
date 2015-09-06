@@ -8,8 +8,10 @@ int putchar(int character)
 {
 #if defined(__is_dros_kernel)
     char input = (char) character;
-    terminal_putchar(input);
+    fb_writechar(input);
 #else
     /* TODO: Implement a system call */
 #endif
+
+    return character;
 }

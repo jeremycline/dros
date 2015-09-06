@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <string.h>
 
 /**Copy n bytes from the source memory location to the destination.

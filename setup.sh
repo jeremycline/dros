@@ -10,13 +10,13 @@ export PATH="$PREFIX/bin:$PATH"
 
 echo "Installing some dev tools..."
 sudo dnf groupinstall -y "C Development Tools and Libraries"
-sudo dnf install -y xorriso grub2-tools qemu
+sudo dnf install -y xorriso grub2-tools qemu-system-x86 bzip2
 # Build dependencies for GCC and binutils
 sudo dnf install -y texinfo cloog bison flex gmp-devel \
     mpfr-devel isl-devel libmpc-devel
 echo "Done."
 
-mkdir cross-build
+mkdir -p cross-build
 pushd cross-build
 
 # Build binutils

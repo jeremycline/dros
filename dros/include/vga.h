@@ -23,17 +23,11 @@ enum vga_color {
 	COLOR_WHITE = 15,
 };
 
-static inline uint8_t make_vga_color(enum vga_color foreground,
+static inline uint16_t make_vga_entry(char character, enum vga_color foreground,
         enum vga_color background)
 {
-	return foreground | background << 4;
-}
-
-static inline uint16_t make_vga_entry(char character, uint8_t color)
-{
-	uint16_t character16 = character;
-	uint16_t color16 = color;
-	return character16 | color16 << 8;
+    uint16_t color = foreground | background << 4;
+    return ((uint16_t) character) | color << 8;
 }
 
 static const size_t VGA_WIDTH = 80;

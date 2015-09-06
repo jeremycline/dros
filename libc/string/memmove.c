@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <string.h>
 
 /** Copies n bytes from the source memory to the destination.
@@ -15,15 +16,15 @@ void * memmove(void *destination_pointer, const void *source_pointer, size_t n)
 
    if (source > destination)
    {
-       for(int i = 0; i < n; i++)
+       for(size_t i = 0; i < n; i++)
        {
            destination[i] = source[i];
        }
    } else if (destination > source)
    {
-       for(int i = n - 1; i > -1; i--)
+       for(size_t i = n; i > 0; i--)
        {
-           destination[i] = source[i];
+           destination[i - 1] = source[i - 1];
        }
    }
 

@@ -4,15 +4,18 @@
 #include <stddef.h>
 
 /* Initialize the terminal */
-void terminal_init(void);
+void fb_init(void);
 
+/* Set the frame buffer colors */
+void fb_set_color(enum vga_color, enum vga_color);
+
+/* Write to an arbitrary cell */
+void fb_write_cell(char, enum vga_color, 
+        enum vga_color, size_t , size_t)
 /* Write a single character to the terminal */
-void terminal_putchar(char c);
+void fb_write_char(char c);
 
 /* Write non-null terminated data to the terminal */
-void terminal_putdata(const char *data, size_t length);
-
-/* Write a null terminated string to the terminal */
-void terminal_putstring(const char *string); 
+void fb_write(const char *data, size_t length);
 
 #endif

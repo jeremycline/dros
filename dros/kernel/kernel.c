@@ -7,11 +7,13 @@
 
 void kernel_early(void)
 {
-    terminal_init();
+    /* TODO set up serial console and start logging */
+    fb_init();
 }
 
 void kernel_main(void)
 {
-    terminal_putstring("Hello!\n Welcome to kernel world.");
+    char *hi = "Hello!\n Welcome to kernel world.";
+    fb_write(hi, strlen(hi));
 }
 

@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <string.h>
 
 void * memset(void *destination_pointer, int constant, size_t n)

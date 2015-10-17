@@ -4,7 +4,7 @@
  */
 
 /* Define the kernel entry point symbol */
-ENTRY(_start)
+ENTRY(_kernel_start)
 
 SECTIONS {
     /* Start loading after 1MB as GRUB, memory-mapped I/O,

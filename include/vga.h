@@ -32,6 +32,6 @@ static inline uint16_t make_vga_entry(char character, enum vga_color foreground,
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
-static const size_t VGA_MEMORY_LOCATION = (uint16_t *) 0xB8000;
+static const size_t VGA_MEMORY_LOCATION = 0xB8000;
 
 #endif

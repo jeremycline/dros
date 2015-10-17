@@ -1,0 +1,71 @@
+---
+- name: Install packages
+  dnf: name={{ item }} state=present
+  with_items:
+    - bison
+    - bzip2
+    - cloog
+    - cmake
+    - flex
+    - gcc
+    - gcc-c++
+    - gdb
+    - git
+    - gmp-devel
+    - grub2-tools
+    - isl-devel
+    - libmpc-devel
+    - make
+    - mpfr-devel
+    - qemu-system-x86
+    - texinfo
+    - xorriso
+
+- name: Create cross-compiler build directory
+  file: path=/home/vagrant/cross-compiler state=directory mode=0755
+
+# Build binutils
+- name: Fetch binutils source
+  get_url: url='https://ftp.gnu.org/gnu/binutils/binutils-{{ binutils_version }}.tar.bz2' dest='/home/vagrant/cross-compiler/binutils-{{ binutils_version }}.tar.bz2'
+
+- unarchive: src=/home/vagrant/cross-compiler/binutils-{{ binutils_version }}.tar.bz2 \
+      dest=/home/vagrant/cross-compiler/ copy=no \
+      creates=/home/vagrant/cross-compiler/binutils-{{ binutils_version }}
+
+- name: Create binutils build directory
+  file: path=/home/vagrant/cross-compiler/binutils-build state=directory mode=0755
+
+- name: Build binutils
+  shell: "{{ item }}"
+  args:
+      chdir: '/home/vagrant/cross-compiler/binutils-build'
+  with_items:
+    - '../binutils-{{ binutils_version }}/configure --target={{ target_arch }} --prefix={{ install_prefix }} \
+        --disable-nls --enable-languages=c --without-headers'
+    - make
+    - make install
+
+# Build GCC
+- name: Fetch GCC source
+  get_url: url=https://ftp.gnu.org/gnu/gcc/gcc-{{ gcc_version }}/gcc-{{ gcc_version }}.tar.bz2 \
+      dest=/home/vagrant/cross-compiler/gcc-{{ gcc_version }}.tar.bz2
+
+- unarchive: src=/home/vagrant/cross-compiler/gcc-{{ gcc_version }}.tar.bz2 \
+      dest=/home/vagrant/cross-compiler/ copy=no \
+      creates=/home/vagrant/cross-compiler/gcc-{{ gcc_version }}
+
+- name: Create GCC build directory
+  file: path=/home/vagrant/cross-compiler/gcc-build state=directory mode=0755
+
+- name: Build GCC
+  shell: "{{ item }}"
+  args:
+      chdir: '/home/vagrant/cross-compiler/gcc-build'
+  with_items:
+    - '../gcc-{{ gcc_version }}/configure --target={{ target_arch }} --prefix={{ install_prefix }} \
+        --disable-nls --enable-languages=c --without-headers'
+    - make all-gcc
+    - make all-target-libgcc
+    - make install-gcc
+    - make install-target-libgcc
+

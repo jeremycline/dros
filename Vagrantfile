@@ -4,9 +4,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
- config.vm.box = "https://dl.fedoraproject.org/pub/alt/purpleidea/vagrant/fedora-22/fedora-22.box"
- config.hostmanager.enabled = true
- config.hostmanager.manage_host = true
+ config.vm.box = "fedora/23-cloud-base"
 
  # By default, Vagrant wants to mount the code in /vagrant with NFSv3, which will fail. Let's
  # explicitly mount the code using NFSv4.
@@ -26,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     dev.vm.synced_folder "..", "/home/vagrant/devel", type: "nfs", nfs_version: 4, nfs_udp: false
 
     dev.vm.provider :libvirt do |domain|
-        domain.cpus = 4
+        domain.cpus = 2
         domain.graphics_type = "spice"
         domain.nested = true
         domain.memory = 4096
@@ -38,8 +36,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     dev.vm.provision "shell", inline: <<-SHELL
-      pushd /vagrant/
-      bash ./setup.sh
-    SHELL
+        set -e
+        
+        echo "Installing Ansible in order to configure the system..."
+        sudo dnf -y install python2 python2-dnf libselinux-python ansible
+        
+        if [ ! -f /tmp/ansible_inventory ]; then
+            echo -e "localhost ansible_connection=local" >> /tmp/ansible_inventory
+        fi
+        
+        ansible-playbook --inventory-file=/tmp/ansible_inventory \
+            /home/vagrant/devel/dros/ansible/dev-playbook.yml
+     SHELL
  end
 end

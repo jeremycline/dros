@@ -2,6 +2,7 @@
 #define _KERNEL_TTY_H
 
 #include <stddef.h>
+#include <vga.h>
 
 /* Initialize the terminal */
 void fb_init(void);
@@ -11,7 +12,7 @@ void fb_set_color(enum vga_color, enum vga_color);
 
 /* Write to an arbitrary cell */
 void fb_write_cell(char, enum vga_color, 
-        enum vga_color, size_t , size_t)
+        enum vga_color, size_t , size_t);
 /* Write a single character to the terminal */
 void fb_write_char(char c);
 

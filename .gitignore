@@ -21,7 +21,9 @@
 
 .vagrant
 
-# Build directories
-cross-build/
-iso/
-os.iso
+# CMake-related files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CopyOfCMakeCache.txt

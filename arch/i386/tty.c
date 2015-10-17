@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <kernel/vga.h>
+#include <vga.h>
 
 /*
  * The VGA framebuffer is capable of displaying text.
@@ -27,7 +27,7 @@ void fb_init(void)
 {
 	fb_cursor_row = 0;
 	fb_cursor_column = 0;
-	framebuffer = VGA_MEMORY_LOCATION;
+	framebuffer = (uint16_t *) VGA_MEMORY_LOCATION;
 	for (size_t row = 0; row < VGA_HEIGHT; row++) {
 		for (size_t column = 0; column < VGA_WIDTH; column++) {
 			const size_t index = row * VGA_WIDTH + column;
@@ -35,48 +35,58 @@ void fb_init(void)
 			    make_vga_entry(' ', COLOR_LIGHT_GREY, COLOR_BLACK);
 		}
 	}
+
+    /* Put the cursor back at the beginning */
+	fb_cursor_row = 0;
+	fb_cursor_column = 0;
 }
 
 void fb_write_cell(char c, enum vga_color foreground,
         enum vga_color background, size_t row, size_t column)
 {
     const size_t index = row * VGA_WIDTH + column;
-    framebuffer[index] = make_vga_entry(character, foreground, background);
+    framebuffer[index] = make_vga_entry(c, foreground, background);
 }
 
 
 /* Write a single character to the terminal */
-void fb_write_char(char c);
+void fb_write_char(char c)
 {
+    /* Handle newline characters */
 	if (c == '\n') {
 		fb_cursor_column = 0;
 		fb_cursor_row++;
 		return;
 	}
 
+    /* Wrap text by bumping the row when the column hits maximum width */
 	if (fb_cursor_column == VGA_WIDTH) {
 		fb_cursor_column = 0;
 		fb_cursor_row++;
 	}
+
 	if (fb_cursor_row == VGA_HEIGHT) {
 		// Shift everyone up to make a new row available
 		for (size_t row = 1; row < VGA_HEIGHT; row++) {
 			for (size_t column = 0; column < VGA_WIDTH; column++) {
 				const size_t entry = row * VGA_WIDTH + column;
 				framebuffer[entry - VGA_WIDTH] = framebuffer[entry];
-				framebuffer[entry] = make_vgaentry(' ', terminal_color);
+				framebuffer[entry] = make_vga_entry(' ', COLOR_LIGHT_GREY, COLOR_BLACK);
 			}
 		}
 
 		fb_cursor_column = 0;
 		fb_cursor_row--;
     }
+
+	fb_write_cell(c, COLOR_LIGHT_GREY, COLOR_BLACK, fb_cursor_row, fb_cursor_column);
+    fb_cursor_column++;
 }
 
 /* Write text to the terminal */
-void fb_write(const char *data, size_t length);
+void fb_write(const char *data, size_t length)
 {
-    for(int i = 0; i < length; i++)
+    for(size_t i = 0; i < length; i++)
     {
         fb_write_char(data[i]);
     }

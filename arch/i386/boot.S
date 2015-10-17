@@ -1,6 +1,6 @@
 # Entry point for the kernel as defined in the linker script.
-.globl _start
-.type _start, @function
+.globl _kernel_start
+.type _kernel_start, @function
 
 # Multiboot specification so this is bootable by a compliant bootloader
 # https://www.gnu.org/software/grub/manual/multiboot/multiboot.html
@@ -19,7 +19,7 @@
 
 
 .section .text
-    _start:
+    _kernel_start:
         # Set up the stack pointer and call the C entry point
         movl $stack_top, %esp
         call kernel_main

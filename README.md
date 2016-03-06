@@ -5,20 +5,29 @@ If so, you are in the right place. Written by someone who has no experience with
 development and only a basic understanding of C, this operating system almost certainly does not
 do what you want it to do.
 
-kernel
-------
+## Build instructions
+```
+vagrant up
+vagrant ssh
+cd devel/dros
+./build.sh
+qemu-system-i386 -kernel kernel.elf
+```
+
+## Layout
+A brief description of the repository layout.
+
+### kernel
 
 Contains generic kernel code.
 
-arch
-----
+### arch
 
 Contains the architecture specific code. This includes some assembly which acts
 as an entry point for the kernel and calls the generic kernel main function.
 
 
-freestanding
-------------
+### freestanding
 
 GCC requires that a freestanding environment provide the following functions:
 

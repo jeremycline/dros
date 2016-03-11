@@ -52,6 +52,15 @@ void fb_write_cell(char c, enum vga_color foreground,
 /* Write a single character to the terminal */
 void fb_write_char(char c)
 {
+    if (c == '\t') {
+        if (fb_cursor_column > 72) {
+            c = '\n';
+        } else {
+            fb_cursor_column += 8 - (fb_cursor_column % 8);
+            return;
+        }
+    }
+
     /* Handle newline characters */
 	if (c == '\n') {
 		fb_cursor_column = 0;

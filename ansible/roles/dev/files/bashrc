@@ -1,0 +1,32 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+export PATH=/usr/local/bin/i686-dros-toolchain/bin/:$PATH
+
+# User specific aliases and functions
+dbuild() {
+    pushd ~/devel/dros
+    cmake -DCMAKE_TOOLCHAIN_FILE=~/devel/dros/arch/i386/toolchain-gcc-i386.cmake .
+    make
+    popd
+}
+
+drun() {
+    if [ ! -f ~/devel/dros/kernel.elf ]; then
+        dbuild
+    fi
+
+    qemu-system-i386 -display curses -kernel ~/devel/dros/kernel.elf
+}
+
+ddebug() {
+    if [ ! -f ~/devel/dros/kernel.elf ]; then
+        dbuild
+    fi
+
+    qemu-system-i386 -s -S -display curses -kernel ~/devel/dros/kernel.elf
+}

@@ -14,6 +14,16 @@ cd devel/dros
 qemu-system-i386 -kernel kernel.elf
 ```
 
+## Helpful tricks
+QEMU has the ability to work with GDB (which is not in the least bit dreadful). You can instruct
+QEMU to start the guest and wait for a remote debugger to attach and continue the execution:
+```
+$ qemu-system-i386 -s -S -kernel kernel.elf
+$ gdb
+(gdb) target remote localhost:1234
+```
+There is a very good guide for GDB at http://www.dirac.org/linux/gdb/.
+
 ## Layout
 A brief description of the repository layout.
 

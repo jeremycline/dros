@@ -2,7 +2,7 @@
 - hosts: all
   roles:
     - dev
-  sudo: true
+  become: true
   vars:
     target_arch: 'i686-elf'
     install_prefix: '/usr/local/bin/i686-dros-toolchain/'

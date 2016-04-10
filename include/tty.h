@@ -7,6 +7,9 @@
 /* Initialize the terminal */
 void fb_init(void);
 
+/* Move the cursor around the terminal */
+void fb_move_cursor(uint8_t row, uint8_t column);
+
 /* Set the frame buffer colors */
 void fb_set_color(enum vga_color, enum vga_color);
 

@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include <vga.h>
+#include <io.h>
 
 /*
  * The VGA framebuffer is capable of displaying text.
@@ -17,10 +18,19 @@
  */
 
 /* Defines the current terminal cursor location */
-size_t fb_cursor_row;
-size_t fb_cursor_column;
+uint8_t fb_cursor_row;
+uint8_t fb_cursor_column;
 
 uint16_t *framebuffer;
+
+void fb_move_cursor(uint8_t row, uint8_t column)
+{
+    uint16_t position = row * VGA_WIDTH + column;
+    outb(FRAMEBUFFER_COMMAND_PORT, FRAMEBUFFER_HIGH_BYTE_COMMAND);
+    outb(FRAMEBUFFER_DATA_PORT, ((position >> 8) & 0x00FF));
+    outb(FRAMEBUFFER_COMMAND_PORT, FRAMEBUFFER_LOW_BYTE_COMMAND);
+    outb(FRAMEBUFFER_DATA_PORT, position & 0x00FF);
+}
 
 /* Initialize the terminal */
 void fb_init(void)
@@ -39,6 +49,7 @@ void fb_init(void)
     /* Put the cursor back at the beginning */
 	fb_cursor_row = 0;
 	fb_cursor_column = 0;
+    fb_move_cursor(fb_cursor_row, fb_cursor_column);
 }
 
 void fb_write_cell(char c, enum vga_color foreground,
@@ -57,6 +68,7 @@ void fb_write_char(char c)
             c = '\n';
         } else {
             fb_cursor_column += 8 - (fb_cursor_column % 8);
+            fb_move_cursor(fb_cursor_row, fb_cursor_column);
             return;
         }
     }
@@ -65,6 +77,7 @@ void fb_write_char(char c)
 	if (c == '\n') {
 		fb_cursor_column = 0;
 		fb_cursor_row++;
+        fb_move_cursor(fb_cursor_row, fb_cursor_column);
 		return;
 	}
 
@@ -90,6 +103,7 @@ void fb_write_char(char c)
 
 	fb_write_cell(c, COLOR_LIGHT_GREY, COLOR_BLACK, fb_cursor_row, fb_cursor_column);
     fb_cursor_column++;
+    fb_move_cursor(fb_cursor_row, fb_cursor_column);
 }
 
 /* Write text to the terminal */

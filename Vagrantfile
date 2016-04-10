@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         domain.nested = true
         domain.memory = 4096
         domain.video_type = "qxl"
-        
+
         # The virtual host will ignore fsync calls to improve performance.
         # In the event of corruption, vagrant destroy and vagrant up.
         domain.volume_cache = "unsafe"

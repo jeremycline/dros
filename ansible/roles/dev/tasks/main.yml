@@ -20,7 +20,6 @@
     - qemu-system-x86
     - texinfo
     - xorriso
-    - vim
     - ncurses
 
 - name: Create cross-compiler build directory
@@ -72,7 +71,7 @@
     - make install-target-libgcc
 
 - name: Enable GDB auto-loading
-  copy: src=gdbinit dest=/home/{{ ansible_env.SUDO_USER }}/.gdbinit
+  copy: src=gdbinit dest=/home/vagrant/.gdbinit
 
 - name: Add custom bashrc
-  copy: src=bashrc dest=/home/{{ ansible_env.SUDO_USER }}/.bashrc
+  copy: src=bashrc dest=/home/vagrant/.bashrc

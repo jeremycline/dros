@@ -41,8 +41,7 @@
   args:
       chdir: '/home/vagrant/cross-compiler/binutils-build'
   with_items:
-    - '../binutils-{{ binutils_version }}/configure --target={{ target_arch }} --prefix={{ install_prefix }} \
-        --disable-nls --enable-languages=c --without-headers'
+    - '../binutils-{{ binutils_version }}/configure --target={{ target_arch }} --prefix={{ install_prefix }} --disable-nls --enable-languages=c --without-headers'
     - make
     - make install
 
@@ -63,8 +62,7 @@
   args:
       chdir: '/home/vagrant/cross-compiler/gcc-build'
   with_items:
-    - '../gcc-{{ gcc_version }}/configure --target={{ target_arch }} --prefix={{ install_prefix }} \
-        --disable-nls --enable-languages=c --without-headers'
+    - '../gcc-{{ gcc_version }}/configure --target={{ target_arch }} --prefix={{ install_prefix }} --disable-nls --enable-languages=c --without-headers'
     - make all-gcc
     - make all-target-libgcc
     - make install-gcc
